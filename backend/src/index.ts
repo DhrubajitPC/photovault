@@ -2,9 +2,11 @@ import express from "express";
 import { port } from "./config/env";
 import photoRouter from "./routes/photos";
 import { pool } from "./db/db";
+import { requestLogger } from "./middleware/requestLogger";
 
 const app = express();
 
+app.use(requestLogger);
 app.use(express.json());
 
 app.get("/health", (_req, res) => {

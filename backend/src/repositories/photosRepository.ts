@@ -1,6 +1,10 @@
 import { pool } from "../db/db";
 
-import type { CreatePhotoRecordInput, Photo } from "../types/photo";
+import type {
+  CreatePhotoRecordInput,
+  Photo,
+  PhotoStatus,
+} from "../types/photo";
 
 export async function findAllPhotos(): Promise<Photo[]> {
   const query = "SELECT * FROM photos ORDER BY updated_at DESC";
@@ -25,5 +29,24 @@ export async function createPhotoRecord(
     input.status || "pending",
   ];
   const result = await pool.query(query, values);
+  return result.rows[0];
+}
+
+export async function updatePhotoStatus(
+  photoId: string,
+  status: PhotoStatus,
+): Promise<Photo> {
+  const query = `
+    UPDATE photos
+    SET status = $2, updated_at = NOW()
+    WHERE id = $1
+    RETURNING *;
+  `;
+  const result = await pool.query(query, [photoId, status]);
+
+  if (!result.rows[0]) {
+    throw new Error(`Photo record not found for id ${photoId}`);
+  }
+
   return result.rows[0];
 }

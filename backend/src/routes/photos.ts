@@ -15,7 +15,7 @@ const upload = multer({
 });
 
 router.get("/", getPhotos);
-router.post("/test", createTestPhoto);
 router.post("/", upload.single("photo"), uploadPhoto);
+router.post("/test", createTestPhoto);
 
 export default router;
