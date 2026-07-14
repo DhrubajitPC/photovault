@@ -1,10 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
-import {
-  createTestPhoto,
-  getPhotos,
-  uploadPhoto,
-} from "../controllers/photosController";
+import { getPhotos, uploadPhoto } from "../controllers/photosController";
 
 const router = Router();
 const upload = multer({
@@ -16,6 +12,5 @@ const upload = multer({
 
 router.get("/", getPhotos);
 router.post("/", upload.single("photo"), uploadPhoto);
-router.post("/test", createTestPhoto);
 
 export default router;

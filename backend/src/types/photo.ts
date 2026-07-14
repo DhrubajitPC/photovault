@@ -1,4 +1,8 @@
-export type PhotoStatus = "pending" | "uploaded" | "upload_failed";
+export enum PhotoStatus  {
+  PENDING = "pending",
+  UPLOADED = "uploaded",
+  UPLOAD_FAILED = "upload_failed",
+}
 
 export type Photo = {
   id: string;

@@ -1,6 +1,6 @@
 import { pool } from "../db/db";
 
-import type {
+import {
   CreatePhotoRecordInput,
   Photo,
   PhotoStatus,
@@ -26,7 +26,7 @@ export async function createPhotoRecord(
     input.s3Key,
     input.contentType,
     input.sizeBytes,
-    input.status || "pending",
+    input.status || PhotoStatus.PENDING,
   ];
   const result = await pool.query(query, values);
   return result.rows[0];

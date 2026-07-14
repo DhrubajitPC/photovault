@@ -1,5 +1,5 @@
 import express from "express";
-import { port } from "./config/env";
+import config from "./config";
 import photoRouter from "./routes/photos";
 import { pool } from "./db/db";
 import { requestLogger } from "./middleware/requestLogger";
@@ -20,8 +20,8 @@ async function start() {
     await pool.query("SELECT 1");
     console.log("Connected to the database successfully");
 
-    app.listen(port, () => {
-      console.log(`PhotoVault backend listening on port ${port}`);
+    app.listen(config.server.port, () => {
+      console.log(`PhotoVault backend listening on port ${config.server.port}`);
     });
   } catch (error) {
     console.error("Failed to connect to the database", error);

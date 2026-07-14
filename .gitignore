@@ -1,0 +1,8 @@
+.DS_Store
+global-bundle.pem
+mac-office-syd.pem
+mac-office.pem
+backend/.env.local
+
+backend/.env.prod
+node_modules/

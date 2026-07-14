@@ -9,7 +9,7 @@ import {
 import { uploadPhotoToS3 } from "./s3";
 import { logger } from "../utils/logger";
 
-import type { Photo } from "../types/photo";
+import { PhotoStatus, type Photo } from "../types/photo";
 
 const allowedMimeTypes = new Set([
   "image/jpeg",
@@ -22,19 +22,6 @@ const allowedMimeTypes = new Set([
 
 export async function listPhotos(): Promise<Photo[]> {
   return findAllPhotos();
-}
-
-export async function createTestPhoto(): Promise<Photo> {
-  const photoId = randomUUID();
-
-  return createPhotoRecord({
-    id: photoId,
-    original_filename: "sample-photo.jpg",
-    s3Key: `photos/${photoId}-sample-photo.jpg`,
-    contentType: "image/jpeg",
-    sizeBytes: 123456,
-    status: "uploaded",
-  });
 }
 
 export async function uploadPhoto(file: Express.Multer.File): Promise<Photo> {
@@ -117,7 +104,7 @@ export async function uploadPhoto(file: Express.Multer.File): Promise<Photo> {
   }
 
   try {
-    const uploadedPhoto = await updatePhotoStatus(photoId, "uploaded");
+    const uploadedPhoto = await updatePhotoStatus(photoId, PhotoStatus.UPLOADED);
 
     logger.info(
       "photo.upload.status_updated",
@@ -165,7 +152,7 @@ async function createPendingPhotoRecord(params: {
     s3Key,
     contentType: file.mimetype,
     sizeBytes: file.size,
-    status: "pending",
+    status: PhotoStatus.PENDING
   });
 }
 
@@ -175,7 +162,7 @@ async function markPhotoUploadFailed(
   originalError: unknown,
 ): Promise<void> {
   try {
-    const failedPhoto = await updatePhotoStatus(photoId, "upload_failed");
+    const failedPhoto = await updatePhotoStatus(photoId, PhotoStatus.UPLOAD_FAILED);
 
     logger.warn(
       "photo.upload.status_marked_failed",
@@ -194,8 +181,8 @@ async function markPhotoUploadFailed(
       {
         photoId,
         s3Key,
-        currentStatus: "pending",
-        desiredStatus: "upload_failed",
+        currentStatus: PhotoStatus.PENDING,
+        desiredStatus: PhotoStatus.UPLOAD_FAILED,
         retryable: true,
         retryAction: "mark_photo_upload_failed",
         retryLookup: { photoId, s3Key },

@@ -3,7 +3,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import config from "../config/env";
+import config from "../config";
 
 const s3Client = new S3Client({
   region: config.aws.region,

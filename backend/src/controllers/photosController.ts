@@ -1,6 +1,5 @@
 import { PhotoUploadError } from "../errors/PhotoUploadError";
 import {
-  createTestPhoto as createTestPhotoService,
   listPhotos,
   uploadPhoto as uploadPhotoService,
 } from "../services/photosService";
@@ -13,20 +12,6 @@ export async function getPhotos(_req: Request, res: Response): Promise<void> {
     res.json({ photos });
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch photos" });
-  }
-}
-
-export async function createTestPhoto(
-  _req: Request,
-  res: Response,
-): Promise<void> {
-  try {
-    const photo = await createTestPhotoService();
-
-    res.status(201).json({ photo });
-  } catch (error) {
-    console.error("Failed to create test photo ", error);
-    res.status(500).json({ error: "Failed to create photo record" });
   }
 }
 
